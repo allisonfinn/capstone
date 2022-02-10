@@ -15,11 +15,15 @@ public class VendingMachineCLI {
 	}
 
 	public void run() {
+		VendingMachine machine1 = new VendingMachine();
 		while (true) {
 			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
+				// run the display inventory method
+				//
+				machine1.displayInventory();
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				// do purchase
 			} else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {

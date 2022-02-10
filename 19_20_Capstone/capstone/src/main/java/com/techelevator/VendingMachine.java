@@ -8,19 +8,23 @@ import java.util.List;
 import java.util.Scanner;
 
 public class VendingMachine {
+
+    //Instance variables --------------------------------------------------------------------------
+    //
     List<Inventory> items = new ArrayList<Inventory>();
+    private BigDecimal customerBalance;
 
-    public void VendingMachine(String[] args) {
+    public VendingMachine() {
 
-    /* vending machine class holds items
-    -map of items-inventory starts with 5
-    -displayItems
-    -feedMoney (adds to balance)
-    -getBalance
-    -purchaseItem (decrements inventory amt and customer balance)
-    - get sound
-    -if sold out , error message
-    */
+        /* vending machine class holds items
+        -map of items-inventory starts with 5
+        -displayItems
+        -feedMoney (adds to balance)
+        -getBalance
+        -purchaseItem (decrements inventory amt and customer balance)
+        - get sound
+        -if sold out , error message
+        */
 
         // Pull absolute path
         //
@@ -39,13 +43,13 @@ public class VendingMachine {
 
                 // Format out = button | itemName | itemPrice | itemType
                 //
-                String[] inventory = line.split("|");
+                String[] inventory = line.split("\\|");
 
                 // Save the value and add them to the string array
                 //
                 String button = inventory[0];
                 String itemName = inventory[1];
-                BigDecimal itemPrice = new BigDecimal(inventory[2]);     // come back to revist
+                BigDecimal itemPrice = new BigDecimal(inventory[2]);     // come back to revisit
                 String itemType = inventory[3];
 
                 Inventory item = null;
@@ -61,15 +65,18 @@ public class VendingMachine {
                 }
                 items.add(item);
             }
-
         } catch (FileNotFoundException ex) {
             System.out.println("File not found.");
         }
     }
-
     public void displayInventory() {
         for (Inventory item : items) {
             System.out.println(item);
         }
+    }
+    // Create method for feeding money when purchase is selected
+    //
+    public void feedMoney () {
+
     }
 }

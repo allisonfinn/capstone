@@ -24,11 +24,11 @@ public abstract class Inventory {
         return itemName;
     }
 
-    public BigDecimal getItemPrice () {
+    public BigDecimal getItemPrice() {
         return itemPrice;
     }
 
-    public String getItemType () {
+    public String getItemType() {
         return itemType;
     }
 
@@ -49,4 +49,11 @@ public abstract class Inventory {
     }
 
     public abstract String getSound();
+
+    // Override object to string method
+    //
+    @Override
+    public String toString() {
+        return this.button + " " + this.itemName + " $" + this.itemPrice + " " + this.itemType;
+    }
 }
