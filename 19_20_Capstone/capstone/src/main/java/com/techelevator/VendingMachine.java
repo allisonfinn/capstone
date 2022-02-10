@@ -12,7 +12,7 @@ public class VendingMachine {
     //Instance variables --------------------------------------------------------------------------
     //
     List<Inventory> items = new ArrayList<Inventory>();
-    private BigDecimal customerBalance;
+    private BigDecimal customerBalance = BigDecimal.ZERO;
 
     public VendingMachine() {
 
@@ -76,7 +76,12 @@ public class VendingMachine {
     }
     // Create method for feeding money when purchase is selected
     //
-    public void feedMoney () {
-
+    public void feedMoney() {
+        System.out.println("Please enter deposit amount in dollars: ");
+        Scanner scan = new Scanner(System.in);
+        String addMoney = scan.nextLine();
+       // try (Scanner scan = new Scanner(System.in)) {
+            customerBalance = customerBalance.add(new BigDecimal(addMoney));
+            System.out.println("Here is your new balance: $" + customerBalance);
+        }
     }
-}
