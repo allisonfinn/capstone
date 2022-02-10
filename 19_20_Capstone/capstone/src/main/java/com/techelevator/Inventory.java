@@ -48,6 +48,5 @@ public abstract class Inventory {
         this.itemType = itemType;
     }
 
-    public abstract void getSound();
-
+    public abstract String getSound();
 }

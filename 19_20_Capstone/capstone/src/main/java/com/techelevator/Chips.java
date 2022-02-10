@@ -2,7 +2,7 @@ package com.techelevator;
 
 import java.math.BigDecimal;
 
-public abstract class Chips extends Inventory {
+public class Chips extends Inventory {
 
     private String sound;
 
@@ -10,7 +10,7 @@ public abstract class Chips extends Inventory {
         super (button,itemName, itemPrice, itemType);
     }
 
-    public String getSound(String sound) {
+    public String getSound() {
         sound = "Crunch Crunch, Yum!";
         return sound;
     }
