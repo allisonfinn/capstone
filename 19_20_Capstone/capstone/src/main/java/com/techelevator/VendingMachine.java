@@ -98,7 +98,7 @@ public class VendingMachine {
         } else {
             System.out.println("Please make your selection: ");
             Scanner scan = new Scanner(System.in);
-            String itemSelection = scan.nextLine();
+            String itemSelection = scan.nextLine().toUpperCase();
             // Price comparison and inventory check
             // our array is created and is "items"
             //
@@ -150,6 +150,7 @@ public class VendingMachine {
         //BigDecimal quarters = new BigDecimal(.25);
         //MathContext m = new MathContext(0);
         //quarters = customerBalance.round(m);
+        machineBalance = customerBalance;
         BigDecimal startingBalance = customerBalance;
         //int customerBalance = customerBalance.intValue();
         BigDecimal quarters = customerBalance.divide(BigDecimal.valueOf(.25));
@@ -195,7 +196,7 @@ public class VendingMachine {
             // purchase | change | feed money |
             //
             LocalDateTime currentDateTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/DD/YYY hh:mm a");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyy hh:mm a");
             String formattedDateTime = currentDateTime.format(formatter);
             // getter from vending machine
             //
