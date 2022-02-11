@@ -1,5 +1,6 @@
 package com.techelevator;
 
+import java.beans.Customizer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
@@ -69,19 +70,100 @@ public class VendingMachine {
             System.out.println("File not found.");
         }
     }
+
     public void displayInventory() {
         for (Inventory item : items) {
             System.out.println(item);
         }
     }
+
     // Create method for feeding money when purchase is selected
     //
     public void feedMoney() {
         System.out.println("Please enter deposit amount in dollars: ");
         Scanner scan = new Scanner(System.in);
         String addMoney = scan.nextLine();
-       // try (Scanner scan = new Scanner(System.in)) {
-            customerBalance = customerBalance.add(new BigDecimal(addMoney));
-            System.out.println("Here is your new balance: $" + customerBalance);
+        // try (Scanner scan = new Scanner(System.in)) {
+        customerBalance = customerBalance.add(new BigDecimal(addMoney));
+        System.out.println("Here is your new balance: $" + customerBalance);
+    }
+
+    // Create method for purchasing an item
+    //
+    public void purchaseItem() {
+        // If customer balance is big decimal zero, ask them to deposit money, else
+        // ask them to make a selection
+        //
+        if (customerBalance == customerBalance.ZERO) {
+            System.out.println("Please deposit money first");
+        } else {
+            System.out.println("Please make your selection: ");
+            Scanner scan = new Scanner(System.in);
+            String itemSelection = scan.nextLine();
+            // Price comparison and inventory check
+            // our array is created and is "items"
+            //
+            // loop through array list
+            // they select A1-A4
+            //
+            // Safety net for lower case versus upper as an input
+            // Safety net for ensure range of section is A1-A4, B1-B4, C1-C4, and D1-D4
+            //
+            for (int i = 0; i < items.size(); i++) {
+                if (itemSelection.equals("A1")) {
+                    // Item price is stored as a string
+                    // BigDecimal myBigDecimal = new BigDecimal(whateverString)
+                    // big decimal
+                    // BigDecimal
+                    BigDecimal myBigDecimal = new BigDecimal(String.valueOf(items.get(0).getItemPrice()));
+                    // compareTo returns 1 if first is bigger
+                    // returns = 0 if equal
+                    // returns -1 if second is less than first
+                    //
+                    // If item price is equal to or less than the customer balance, continue
+                    //
+                    if ((myBigDecimal.compareTo(customerBalance) == 0) || (myBigDecimal.compareTo(customerBalance) == -1)) {
+                        // debit customer balance amount of item
+                        //
+                        customerBalance.subtract(myBigDecimal);
+                        // reduce inventory by 1
+                        //
+
+                        // Sound
+                        //
+                        if (items.get(0).getItemType().equals("Chip")) {                        // may need to revisit .equals versus ==
+                            //Chips chipSound = new Chips("", "", BigDecimal.ZERO, "");
+                            //String sound = chipSound.getSound();
+                            System.out.println("Crunch Crunch, Yum!");
+                        }
+                        //System.out.println(items.get(0).getItemName());
+                        System.out.println("Your remaining balance is $: "+ customerBalance + ".");
+                        break;
+                    }
+                } else if (itemSelection.equals("A2")) {
+                    BigDecimal myBigDecimal = new BigDecimal(String.valueOf(items.get(0).getItemPrice()));
+                    // pseduo code
+                    // call method for bigDec comparison
+                    // if compare to return 1 --> prompt user to deposit more money
+                    // completeTransaction method
+                    //
+                    if ((myBigDecimal.compareTo(customerBalance) == 0) || (myBigDecimal.compareTo(customerBalance) == -1)) {
+                        customerBalance.subtract(myBigDecimal);
+                        //reduce decimal
+                        if (items.get(0).getItemType().equals("Chip")) {
+                            System.out.println("Crunch Crunch, Yum!");
+                        }
+                        System.out.println("Your remaining balance is $: "+ customerBalance + ".");
+                        break;
+                    }
+                } else if (itemSelection.equals("A3")) {
+                    System.out.println(items.get(2));
+                    break;
+                } else if (itemSelection.equals("A4")) {
+                    System.out.println(items.get(3));
+                    break;
+                }
+            }
         }
     }
+}

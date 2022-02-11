@@ -6,6 +6,7 @@ public class Chips extends Inventory {
 
     private String sound;
 
+
     public Chips (String button, String itemName, BigDecimal itemPrice, String itemType) {
         super (button,itemName, itemPrice, itemType);
     }
