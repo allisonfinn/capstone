@@ -1,13 +1,13 @@
 package com.techelevator;
 
-import com.techelevator.view.Menu;
-
-import java.beans.Customizer;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -17,8 +17,10 @@ public class VendingMachine {
     //Instance variables --------------------------------------------------------------------------
     //
     List<Inventory> items = new ArrayList<Inventory>();
-    private BigDecimal customerBalance = BigDecimal.valueOf(0.00);
+    private BigDecimal customerBalance = BigDecimal.valueOf(0.00).setScale(2);
     String haltTransaction = "";
+    String transaction = "";
+    private BigDecimal machineBalance = BigDecimal.valueOf(0.0).setScale(2);
 
 
     public VendingMachine() {
@@ -50,13 +52,13 @@ public class VendingMachine {
 
                 Inventory item = null;
 
-                if (itemType.equals("Chips")) {
+                if (itemType.equals("Chip")) {
                     item = new Chips(button, itemName, itemPrice, itemType, itemQuantity);
                 } else if (itemType.equals("Candy")) {
                     item = new Candy(button, itemName, itemPrice, itemType, itemQuantity);
-                } else if (itemType.equals("Drinks")) {
+                } else if (itemType.equals("Drink")) {
                     item = new Drinks(button, itemName, itemPrice, itemType, itemQuantity);
-                } else {
+                } else if (itemType.equals("Gum")) {
                     item = new Gum(button, itemName, itemPrice, itemType, itemQuantity);
                 }
                 items.add(item);
@@ -65,84 +67,29 @@ public class VendingMachine {
             System.out.println("File not found.");
         }
     }
-
+    // Methods --------------------------------------------------------------------------------
+    //
+    // inventory display
+    //
     public void displayInventory() {
         for (Inventory item : items) {
             System.out.println(item);
         }
     }
-
     // Create method for feeding money when purchase is selected
+    //
     public void feedMoney() {
         System.out.println("Please enter deposit amount in dollars: ");
         Scanner scan = new Scanner(System.in);
         String addMoney = scan.nextLine();
         // try (Scanner scan = new Scanner(System.in)) {
-        customerBalance = customerBalance.add(new BigDecimal(addMoney));
+        customerBalance = customerBalance.add(new BigDecimal(addMoney)).setScale(2);
         System.out.println("Here is your new balance: $" + customerBalance);
+        transaction = "feed";
+        logTransactions();
     }
-
     // Create method for purchasing an item
-    public void completeTransaction(Inventory item) {
-        //decrement inventory, decrement balance, change, sound
-        BigDecimal myBigDecimal = new BigDecimal(String.valueOf(item.getItemPrice()));
-        if ((myBigDecimal.compareTo(customerBalance) == 0) || (myBigDecimal.compareTo(customerBalance) == -1)) {
-            // debit customer balance amount of item
-            customerBalance = customerBalance.subtract(myBigDecimal);
-            // reduce inventory by 1
-            if (item.getItemQuantity() > 0) {
-                int newItemQuantity = (item.getItemQuantity() - 1);
-                item.setItemQuantity(newItemQuantity);
-                // quantity greater than 0 and chip
-                if (item.getItemType().equals("Chip")) {
-                    //Chips chipSound = new Chips("", "", BigDecimal.ZERO, "");
-                    //String sound = chipSound.getSound();
-                    System.out.println(item.getSound());
-                }
-                //System.out.println(items.get(0).getItemName());
-                System.out.println("Your remaining balance is : $" + customerBalance + ".");
-            } else {
-                System.out.println(item.getItemName() + " SOLD OUT");
-                haltTransaction = "stop";
-            }
-        }
-    }
-
-    public void giveChange() {
-        //BigDecimal nickels = new BigDecimal(.05);
-        //BigDecimal dimes = new BigDecimal(.10);
-        //BigDecimal quarters = new BigDecimal(.25);
-        //MathContext m = new MathContext(0);
-        //quarters = customerBalance.round(m);
-        BigDecimal remainingMoney = BigDecimal.valueOf(0);
-        //int customerBalance = customerBalance.intValue();
-
-        BigDecimal quarters = customerBalance.divide(BigDecimal.valueOf(.25));
-        quarters = quarters.setScale(0, RoundingMode.DOWN);
-        customerBalance = customerBalance.remainder(new BigDecimal(.25));
-
-        System.out.print("Your change is: " + quarters + " quarter(s) ");
-        if ((!(customerBalance.compareTo(BigDecimal.ZERO) == 0) && (customerBalance.compareTo(BigDecimal.valueOf(.10)) == 0) || (customerBalance.compareTo(BigDecimal.valueOf(.10)) == 1))) {
-
-            BigDecimal dimes = customerBalance.divide(BigDecimal.valueOf(.10));
-            dimes = dimes.setScale(0, RoundingMode.DOWN);
-            customerBalance = customerBalance.remainder(new BigDecimal(.10));
-            if (customerBalance.compareTo(BigDecimal.valueOf(.10)) == 0) {
-                customerBalance = customerBalance.subtract(BigDecimal.valueOf(.10));
-            }
-            System.out.print(dimes + " dime(s) ");
-        }
-        if ((!(customerBalance.compareTo(BigDecimal.ZERO) == 0)) && (((customerBalance.compareTo(BigDecimal.valueOf(.05)) == 0) || (customerBalance.compareTo(BigDecimal.valueOf(.05)) == 1)))) {
-
-            BigDecimal nickels = customerBalance.divide(BigDecimal.valueOf(.05));
-            customerBalance = customerBalance.ZERO;
-            System.out.print(nickels + " nickel(s)");
-        }
-
-
-    }
-
-
+    //
     public void purchaseItem() {
         // If customer balance is big decimal zero, ask them to deposit money, else
         // ask them to make a selection
@@ -168,6 +115,107 @@ public class VendingMachine {
                 }
             }
             completeTransaction(item);
+        }
+    }
+    // Method for completing transaction
+    // reduce inventory, customer balance, and play category (itemType) sound
+    //
+    public void completeTransaction(Inventory item) {
+        //decrement inventory, decrement balance, change, sound
+        BigDecimal myBigDecimal = new BigDecimal(String.valueOf(item.getItemPrice()));
+        if ((myBigDecimal.compareTo(customerBalance) == 0) || (myBigDecimal.compareTo(customerBalance) == -1)) {
+            // debit customer balance amount of item
+            customerBalance = customerBalance.subtract(myBigDecimal);
+            // reduce inventory by 1
+            if (item.getItemQuantity() > 0) {
+                int newItemQuantity = (item.getItemQuantity() - 1);
+                item.setItemQuantity(newItemQuantity);
+                // found out sound of item
+                //
+
+                System.out.println(item.getSound());
+                //System.out.println(items.get(0).getItemName());
+                System.out.println("Your remaining balance is : $" + customerBalance + ".");
+            } else {
+                System.out.println(item.getItemName() + " SOLD OUT");
+                haltTransaction = "stop";
+            }
+        }
+        transaction = "purchase";
+        logTransactions();
+    }
+    public void giveChange() {
+        //BigDecimal nickels = new BigDecimal(.05);
+        //BigDecimal dimes = new BigDecimal(.10);
+        //BigDecimal quarters = new BigDecimal(.25);
+        //MathContext m = new MathContext(0);
+        //quarters = customerBalance.round(m);
+        BigDecimal startingBalance = customerBalance;
+        //int customerBalance = customerBalance.intValue();
+        BigDecimal quarters = customerBalance.divide(BigDecimal.valueOf(.25));
+        quarters = quarters.setScale(0, RoundingMode.DOWN);
+        customerBalance = customerBalance.remainder(new BigDecimal(.25)).setScale(2, RoundingMode.UP);
+
+        System.out.print("Your change is: " + quarters + " quarter(s) ");
+        if ((!(customerBalance.compareTo(BigDecimal.ZERO) == 0) && (customerBalance.compareTo(BigDecimal.valueOf(.10)) == 0) || (customerBalance.compareTo(BigDecimal.valueOf(.10)) == 1))) {
+
+            BigDecimal dimes = customerBalance.divide(BigDecimal.valueOf(.10));
+            dimes = dimes.setScale(0, RoundingMode.DOWN);
+            customerBalance = customerBalance.remainder(new BigDecimal(.10)).setScale(2, RoundingMode.UP);
+            if (customerBalance.compareTo(BigDecimal.valueOf(.10)) == 0) {
+                customerBalance = customerBalance.subtract(BigDecimal.valueOf(.10));
+            }
+            System.out.print(dimes + " dime(s) ");
+        }
+        if ((!(customerBalance.compareTo(BigDecimal.ZERO) == 0)) && (((customerBalance.compareTo(BigDecimal.valueOf(.05)) == 0) || (customerBalance.compareTo(BigDecimal.valueOf(.05)) == 1)))) {
+
+            BigDecimal nickels = customerBalance.divide(BigDecimal.valueOf(.05));
+            customerBalance = customerBalance.ZERO;
+            System.out.print(nickels + " nickel(s)");
+        }
+        transaction = "change";
+        logTransactions();
+    }
+    // If time, refactor into own class
+    // Log
+    /*
+    01/01/2019 12:00:15 PM FEED MONEY: $5.00 $10.00
+    01/01/2019 12:00:20 PM Crunchie B4 $1.75 $8.25
+    01/01/2019 12:01:25 PM Cowtales B2 $1.50 $6.75
+    01/01/2019 12:01:35 PM GIVE CHANGE: $6.75 $0.00
+    */
+    public void logTransactions() {
+        String vendingLogFile = "C:\\Users\\Student\\workspace\\module-1-capstone-team-0\\19_20_Capstone\\capstone\\src\\main\\resources\\vendingmachinglog.txt";
+        File input = new File(vendingLogFile);
+        try (PrintWriter outputLine = new PrintWriter(new FileOutputStream(vendingLogFile, true))) {
+            // Log the info based on what called you
+            //
+            // how to check if this deposit money? purchase transaction? finish transaction and return change?
+            // have each transaction type set a variable we can check
+            // purchase | change | feed money |
+            //
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/DD/YYY hh:mm a");
+            String formattedDateTime = currentDateTime.format(formatter);
+            // getter from vending machine
+            //
+            String logTypeTransactionText = "";
+            String logText = (formattedDateTime + " ");
+            if (transaction == "change") {
+                //placerhold end text
+                logText = logText + "GIVE CHANGE: $" + machineBalance + " $" + customerBalance;
+                machineBalance = customerBalance.setScale(2);
+            } else if (transaction == "purchase") {
+                // placerholder end text
+            } else if (transaction == "feed") {
+                // placeholder
+                logText = logText + "FEED MONEY: $" + machineBalance + " $" + customerBalance;
+                machineBalance = customerBalance.setScale(2);
+            }
+            outputLine.println(logText);
+        } catch (FileNotFoundException e) {
+            // message user about lack of file
+            System.out.println("Destination file not found");
         }
     }
 }
