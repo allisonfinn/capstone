@@ -60,6 +60,9 @@ public abstract class Inventory {
     //
     @Override
     public String toString() {
-        return this.button + " " + this.itemName + " $" + this.itemPrice + " " + this.itemType;
+        if(this.itemQuantity < 1) {
+            return this.button + " " + this.itemName + " SOLD OUT";
+        }
+        return this.button + " " + this.itemName + " $" + this.itemPrice;
     }
 }

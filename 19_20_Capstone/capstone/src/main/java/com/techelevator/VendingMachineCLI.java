@@ -40,7 +40,7 @@ public class VendingMachineCLI {
 						//product buy method
 						machine1.purchaseItem();
 					} else if (purchaseChoice.equals(SUB_MENU_OPTION_FINISH_TRANSACTION)) {
-						//before break, finalize transaction
+						machine1.giveChange();
 						break;
 					}
 				}
