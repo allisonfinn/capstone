@@ -8,12 +8,14 @@ public abstract class Inventory {
     private String itemName;
     private BigDecimal itemPrice;
     private String itemType;
+    private int itemQuantity = 5;
 
-    public Inventory(String button, String itemName, BigDecimal itemPrice, String itemType) {
+    public Inventory(String button, String itemName, BigDecimal itemPrice, String itemType, int itemQuantity) {
         this.button = button;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemType = itemType;
+        this.itemQuantity = itemQuantity;
     }
 
     public String getButton() {
@@ -32,6 +34,8 @@ public abstract class Inventory {
         return itemType;
     }
 
+    public int getItemQuantity() { return itemQuantity;}
+
     public void setButton(String button) {
         this.button = button;
     }
@@ -47,6 +51,8 @@ public abstract class Inventory {
     public void setItemType(String itemType) {
         this.itemType = itemType;
     }
+
+    public void setItemQuantity(int itemQuantity) { this.itemQuantity = itemQuantity; }
 
     public abstract String getSound();
 

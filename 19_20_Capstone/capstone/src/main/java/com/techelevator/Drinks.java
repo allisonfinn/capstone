@@ -6,8 +6,8 @@ public class Drinks extends Inventory {
 
     private String sound;
 
-    public Drinks (String button, String itemName, BigDecimal itemPrice, String itemType) {
-        super (button,itemName, itemPrice, itemType);
+    public Drinks (String button, String itemName, BigDecimal itemPrice, String itemType, int itemQuantity) {
+        super (button,itemName, itemPrice, itemType, itemQuantity);
     }
 
     public String getSound() {

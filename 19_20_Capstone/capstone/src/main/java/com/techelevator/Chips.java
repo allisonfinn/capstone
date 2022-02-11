@@ -7,8 +7,8 @@ public class Chips extends Inventory {
     private String sound;
 
 
-    public Chips (String button, String itemName, BigDecimal itemPrice, String itemType) {
-        super (button,itemName, itemPrice, itemType);
+    public Chips (String button, String itemName, BigDecimal itemPrice, String itemType, int itemQuantity) {
+        super (button,itemName, itemPrice, itemType, itemQuantity);
     }
 
     public String getSound() {

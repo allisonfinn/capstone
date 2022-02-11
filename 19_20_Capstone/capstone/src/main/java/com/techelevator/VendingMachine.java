@@ -13,22 +13,11 @@ public class VendingMachine {
     //Instance variables --------------------------------------------------------------------------
     //
     List<Inventory> items = new ArrayList<Inventory>();
-    private BigDecimal customerBalance = BigDecimal.ZERO;
+    private BigDecimal customerBalance = BigDecimal.valueOf(0.00);
+
 
     public VendingMachine() {
 
-        /* vending machine class holds items
-        -map of items-inventory starts with 5
-        -displayItems
-        -feedMoney (adds to balance)
-        -getBalance
-        -purchaseItem (decrements inventory amt and customer balance)
-        - get sound
-        -if sold out , error message
-        */
-
-        // Pull absolute path
-        //
         String vendingMachineTXT = "C:\\Users\\Student\\workspace\\module-1-capstone-team-0\\19_20_Capstone\\capstone\\ExampleFiles\\VendingMachine.txt";
 
         // Create a List -----------------------------------------------------------------------------
@@ -52,17 +41,18 @@ public class VendingMachine {
                 String itemName = inventory[1];
                 BigDecimal itemPrice = new BigDecimal(inventory[2]);     // come back to revisit
                 String itemType = inventory[3];
+                int itemQuantity = Integer.parseInt(inventory[4]);
 
                 Inventory item = null;
 
                 if (itemType.equals("Chips")) {
-                    item = new Chips(button, itemName, itemPrice, itemType);
+                    item = new Chips(button, itemName, itemPrice, itemType, itemQuantity);
                 } else if (itemType.equals("Candy")) {
-                    item = new Candy(button, itemName, itemPrice, itemType);
+                    item = new Candy(button, itemName, itemPrice, itemType, itemQuantity);
                 } else if (itemType.equals("Drinks")) {
-                    item = new Drinks(button, itemName, itemPrice, itemType);
+                    item = new Drinks(button, itemName, itemPrice, itemType, itemQuantity);
                 } else {
-                    item = new Gum(button, itemName, itemPrice, itemType);
+                    item = new Gum(button, itemName, itemPrice, itemType, itemQuantity);
                 }
                 items.add(item);
             }
@@ -78,7 +68,6 @@ public class VendingMachine {
     }
 
     // Create method for feeding money when purchase is selected
-    //
     public void feedMoney() {
         System.out.println("Please enter deposit amount in dollars: ");
         Scanner scan = new Scanner(System.in);
@@ -89,7 +78,9 @@ public class VendingMachine {
     }
 
     // Create method for purchasing an item
-    //
+
+
+
     public void purchaseItem() {
         // If customer balance is big decimal zero, ask them to deposit money, else
         // ask them to make a selection
@@ -113,25 +104,21 @@ public class VendingMachine {
                 if (itemSelection.equals("A1")) {
                     // Item price is stored as a string
                     // BigDecimal myBigDecimal = new BigDecimal(whateverString)
-                    // big decimal
-                    // BigDecimal
                     BigDecimal myBigDecimal = new BigDecimal(String.valueOf(items.get(0).getItemPrice()));
                     // compareTo returns 1 if first is bigger
                     // returns = 0 if equal
                     // returns -1 if second is less than first
-                    //
                     // If item price is equal to or less than the customer balance, continue
-                    //
                     if ((myBigDecimal.compareTo(customerBalance) == 0) || (myBigDecimal.compareTo(customerBalance) == -1)) {
                         // debit customer balance amount of item
-                        //
-                        customerBalance.subtract(myBigDecimal);
+                        customerBalance = customerBalance.subtract(myBigDecimal);
                         // reduce inventory by 1
-                        //
+                    if (items.get(0).getItemQuantity() > 0) {
+                        int newItemQuantity = (items.get(0).getItemQuantity() - 1);
+                        items.get(0).setItemQuantity(newItemQuantity);
+                        }
 
-                        // Sound
-                        //
-                        if (items.get(0).getItemType().equals("Chip")) {                        // may need to revisit .equals versus ==
+                        if (items.get(0).getItemType().equals("Chip")) {
                             //Chips chipSound = new Chips("", "", BigDecimal.ZERO, "");
                             //String sound = chipSound.getSound();
                             System.out.println("Crunch Crunch, Yum!");
