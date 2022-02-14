@@ -53,7 +53,7 @@ public abstract class Inventory {
         this.itemType = itemType;
     }
 
-     */
+    */
     public void setItemQuantity(int itemQuantity) { this.itemQuantity = itemQuantity; }
 
     public abstract String getSound();

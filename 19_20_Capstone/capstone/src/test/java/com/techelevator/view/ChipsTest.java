@@ -14,7 +14,7 @@ public class ChipsTest {
     public void setUp() throws Exception {
         sut = new Chips("A1", "Potato Crisps", new BigDecimal(3.05), "Chip", 5);
     }
-
+    // Constructor test ---------------------------------------------------------------------------
     @Test
     public void test_chips() {
         Assert.assertEquals("A1", sut.getButton());
@@ -23,7 +23,7 @@ public class ChipsTest {
         Assert.assertEquals("Chip", sut.getItemType());
         Assert.assertEquals(5, sut.getItemQuantity());
     }
-
+    // sound method test --------------------------------------------------------------------------
     @Test
     public void get_sound_test() {
         Assert.assertEquals("Crunch Crunch, Yum!", sut.getSound());

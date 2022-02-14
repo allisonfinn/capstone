@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 public class InventoryTest {
     Inventory sut;
 
+    // Testing String override method for if sold out and if item is available
     @Test
     public void sold_out_test() {
         sut = new Candy("B1", "Moonpie", new BigDecimal(1.80), "Candy", 0);

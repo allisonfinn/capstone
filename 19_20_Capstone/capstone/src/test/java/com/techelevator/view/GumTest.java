@@ -14,7 +14,7 @@ public class GumTest {
     public void setUp() throws Exception {
         sut = new Gum("D1", "U-Chews", new BigDecimal(.85), "Gum", 5);
     }
-
+    // Constructor test ---------------------------------------------------------------------------
     @Test
     public void test_gum() {
         Assert.assertEquals("D1", sut.getButton());
@@ -23,7 +23,7 @@ public class GumTest {
         Assert.assertEquals("Gum", sut.getItemType());
         Assert.assertEquals(5, sut.getItemQuantity());
     }
-
+    // sound method test --------------------------------------------------------------------------
     @Test
     public void get_sound_test() {
         Assert.assertEquals("Chew Chew, Yum!", sut.getSound());

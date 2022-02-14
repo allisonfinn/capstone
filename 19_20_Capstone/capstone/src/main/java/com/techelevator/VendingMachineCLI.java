@@ -37,16 +37,19 @@ public class VendingMachineCLI {
 					String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASE_SUB_MENU_OPTIONS);
 
 					if (purchaseChoice.equals(SUB_MENU_OPTION_FEED_MONEY)) {
-						//feed money method
+						// Feed money
+						// Setting variables before method call helps with JUnit tests
 						System.out.println("Please enter deposit amount in dollars: ");
 						Scanner scan = new Scanner(System.in);
 						String addAmount = scan.nextLine();
 						BigDecimal addMoney = new BigDecimal(addAmount).setScale(2);
+						// monetary funds established, call feed money method
 						machine1.feedMoney(addMoney);
 					} else if (purchaseChoice.equals(SUB_MENU_OPTION_SELECT_PRODUCT)) {
-						//product buy method
+						//Purchase item method called
 						machine1.purchaseItem();
 					} else if (purchaseChoice.equals(SUB_MENU_OPTION_FINISH_TRANSACTION)) {
+						//Give change method called
 						machine1.giveChange();
 						break;
 					}
