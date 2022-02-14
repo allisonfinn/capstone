@@ -36,6 +36,7 @@ public abstract class Inventory {
 
     public int getItemQuantity() { return itemQuantity;}
 
+    /* not being used
     public void setButton(String button) {
         this.button = button;
     }
@@ -52,6 +53,7 @@ public abstract class Inventory {
         this.itemType = itemType;
     }
 
+     */
     public void setItemQuantity(int itemQuantity) { this.itemQuantity = itemQuantity; }
 
     public abstract String getSound();

@@ -18,7 +18,6 @@ public class VendingMachine {
     //
     List<Inventory> items = new ArrayList<Inventory>();
     private BigDecimal customerBalance = BigDecimal.valueOf(0.00).setScale(2);
-    String haltTransaction = "";
     String transaction = "";
     private BigDecimal machineBalance = BigDecimal.valueOf(0.0).setScale(2);
 
@@ -67,6 +66,7 @@ public class VendingMachine {
             System.out.println("File not found.");
         }
     }
+
     // Methods --------------------------------------------------------------------------------
     //
     // inventory display
@@ -76,14 +76,15 @@ public class VendingMachine {
             System.out.println(item);
         }
     }
+
     // Create method for feeding money when purchase is selected
     //
-    public void feedMoney() {
+    public void feedMoney(BigDecimal addMoney) {
         Inventory item = null;
-        System.out.println("Please enter deposit amount in dollars: ");
-        Scanner scan = new Scanner(System.in);
-        String addAmount = scan.nextLine();
-        BigDecimal addMoney = new BigDecimal(addAmount).setScale(2);
+        //System.out.println("Please enter deposit amount in dollars: ");
+       // Scanner scan = new Scanner(System.in);
+        //String addAmount = scan.nextLine();
+       // BigDecimal addMoney = new BigDecimal(addAmount).setScale(2);
         if ((addMoney.compareTo(BigDecimal.ONE) == 1) || (addMoney.compareTo(BigDecimal.ONE) == 0)) {
             customerBalance = customerBalance.add(addMoney);
             System.out.println("Here is your new balance: $" + customerBalance);
@@ -93,6 +94,7 @@ public class VendingMachine {
             System.out.println("Invalid dollar amount");
         }
     }
+
     // Create method for purchasing an item
     //
     public void purchaseItem() {
@@ -104,6 +106,7 @@ public class VendingMachine {
             System.out.println("Please make your selection: ");
             Scanner scan = new Scanner(System.in);
             String itemSelection = scan.nextLine().toUpperCase();
+
             // Price comparison and inventory check
             // our array is created and is "items"
             //
@@ -121,11 +124,15 @@ public class VendingMachine {
             }
             if (item == null) {
                 System.out.println("Invalid selection.");
+            } else if (customerBalance.compareTo(item.getItemPrice()) == -1) {
+                System.out.println("Insufficient funds.");
             } else {
+
                 completeTransaction(item);
             }
         }
     }
+
     // Method for completing transaction
     // reduce inventory, customer balance, and play category (itemType) sound
     //
@@ -147,12 +154,12 @@ public class VendingMachine {
                 System.out.println("Your remaining balance is : $" + customerBalance + ".");
             } else {
                 System.out.println(item.getItemName() + " SOLD OUT");
-                haltTransaction = "stop";
             }
         }
         transaction = "purchase";
         logTransactions(item);
     }
+
     public void giveChange() {
         Inventory item = null;
         //BigDecimal nickels = new BigDecimal(.05);
@@ -187,6 +194,7 @@ public class VendingMachine {
         transaction = "change";
         logTransactions(item);
     }
+
     // If time, refactor into own class
     // Log
     /*

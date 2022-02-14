@@ -2,6 +2,9 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 
+import java.math.BigDecimal;
+import java.util.Scanner;
+
 public class VendingMachineCLI {
 
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
@@ -35,7 +38,11 @@ public class VendingMachineCLI {
 
 					if (purchaseChoice.equals(SUB_MENU_OPTION_FEED_MONEY)) {
 						//feed money method
-						machine1.feedMoney();
+						System.out.println("Please enter deposit amount in dollars: ");
+						Scanner scan = new Scanner(System.in);
+						String addAmount = scan.nextLine();
+						BigDecimal addMoney = new BigDecimal(addAmount).setScale(2);
+						machine1.feedMoney(addMoney);
 					} else if (purchaseChoice.equals(SUB_MENU_OPTION_SELECT_PRODUCT)) {
 						//product buy method
 						machine1.purchaseItem();
