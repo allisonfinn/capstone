@@ -79,14 +79,19 @@ public class VendingMachine {
     // Create method for feeding money when purchase is selected
     //
     public void feedMoney() {
+        Inventory item = null;
         System.out.println("Please enter deposit amount in dollars: ");
         Scanner scan = new Scanner(System.in);
-        String addMoney = scan.nextLine();
-        // try (Scanner scan = new Scanner(System.in)) {
-        customerBalance = customerBalance.add(new BigDecimal(addMoney)).setScale(2);
-        System.out.println("Here is your new balance: $" + customerBalance);
-        transaction = "feed";
-        logTransactions();
+        String addAmount = scan.nextLine();
+        BigDecimal addMoney = new BigDecimal(addAmount).setScale(2);
+        if ((addMoney.compareTo(BigDecimal.ONE) == 1) || (addMoney.compareTo(BigDecimal.ONE) == 0)) {
+            customerBalance = customerBalance.add(addMoney);
+            System.out.println("Here is your new balance: $" + customerBalance);
+            transaction = "feed";
+            logTransactions(item);
+        } else {
+            System.out.println("Invalid dollar amount");
+        }
     }
     // Create method for purchasing an item
     //
@@ -114,7 +119,11 @@ public class VendingMachine {
                     item = items.get(i);
                 }
             }
-            completeTransaction(item);
+            if (item == null) {
+                System.out.println("Invalid selection.");
+            } else {
+                completeTransaction(item);
+            }
         }
     }
     // Method for completing transaction
@@ -142,9 +151,10 @@ public class VendingMachine {
             }
         }
         transaction = "purchase";
-        logTransactions();
+        logTransactions(item);
     }
     public void giveChange() {
+        Inventory item = null;
         //BigDecimal nickels = new BigDecimal(.05);
         //BigDecimal dimes = new BigDecimal(.10);
         //BigDecimal quarters = new BigDecimal(.25);
@@ -171,11 +181,11 @@ public class VendingMachine {
         if ((!(customerBalance.compareTo(BigDecimal.ZERO) == 0)) && (((customerBalance.compareTo(BigDecimal.valueOf(.05)) == 0) || (customerBalance.compareTo(BigDecimal.valueOf(.05)) == 1)))) {
 
             BigDecimal nickels = customerBalance.divide(BigDecimal.valueOf(.05));
-            customerBalance = customerBalance.ZERO;
+            customerBalance = customerBalance.ZERO.setScale(0);
             System.out.print(nickels + " nickel(s)");
         }
         transaction = "change";
-        logTransactions();
+        logTransactions(item);
     }
     // If time, refactor into own class
     // Log
@@ -185,7 +195,7 @@ public class VendingMachine {
     01/01/2019 12:01:25 PM Cowtales B2 $1.50 $6.75
     01/01/2019 12:01:35 PM GIVE CHANGE: $6.75 $0.00
     */
-    public void logTransactions() {
+    public void logTransactions(Inventory item) {
         String vendingLogFile = "C:\\Users\\Student\\workspace\\module-1-capstone-team-0\\19_20_Capstone\\capstone\\src\\main\\resources\\vendingmachinglog.txt";
         File input = new File(vendingLogFile);
         try (PrintWriter outputLine = new PrintWriter(new FileOutputStream(vendingLogFile, true))) {
@@ -207,7 +217,8 @@ public class VendingMachine {
                 logText = logText + "GIVE CHANGE: $" + machineBalance + " $" + customerBalance;
                 machineBalance = customerBalance.setScale(2);
             } else if (transaction == "purchase") {
-                // placerholder end text
+                // placeholder end text
+                logText = logText + item.getItemName() + " " + item.getButton() + " $" + item.getItemPrice() + " $" + customerBalance;
             } else if (transaction == "feed") {
                 // placeholder
                 logText = logText + "FEED MONEY: $" + machineBalance + " $" + customerBalance;
